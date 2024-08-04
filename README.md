@@ -187,9 +187,9 @@ docker build . -t mineru:latest
 
 ```
 git lfs clone https://huggingface.co/wanderkid/PDF-Extract-Kit
-docker run -it --rm -v ~/data/pdfkit_output:/output -v ~/data/pdfkit_input:/input -v ~/data/models/pdfkit_models:/opt/models --gpus all mineru magic-pdf pdf-command --pdf "/input/test.pdf" --inside_model true  --model_mode full
+docker run -it --rm -v ~/data/mineru/output:/output -v ~/data/mineru/input:/input -v ~/data/models/mineru/models:/opt/models --gpus all mineru magic-pdf pdf-command --pdf "/input/test.pdf" --inside_model true  --model_mode full
 
-docker run -d -v ~/data/pdfkit_output:/tmp -v ~/data/pdfkit_input:/home/mineru/input -v ~/data/models/pdfkit_models:/opt/models --gpus all --runtime=nvidia -e CUDA_VISIBLE_DEVICES=1 --name mineru -p 5033:5033 mineru
+docker run -d -v ~/data/mineru/output:/tmp -v ~/data/mineru/input:/home/mineru/input -v ~/data/models/mineru_models:/opt/models --gpus all --runtime=nvidia -e CUDA_VISIBLE_DEVICES=1 --name mineru -p 5033:5033 mineru
 
 source /opt/mineru_venv/bin/activate
 magic-pdf pdf-command --pdf "./input/test.pdf" --inside_model true --model_mode full
