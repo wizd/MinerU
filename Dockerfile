@@ -84,6 +84,11 @@ RUN mkdir /home/mineru/input /home/mineru/output \
 
 WORKDIR /home/mineru
 
+# 创建并设置脚本
+COPY process_pdf.sh /home/mineru/process_pdf.sh
+RUN chmod +x /home/mineru/process_pdf.sh
+RUN chown mineru:mineru /home/mineru/process_pdf.sh
+
 # 暴露SSH端口
 EXPOSE 5033
 
