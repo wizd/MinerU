@@ -179,6 +179,16 @@ You also need to modify the value of "device-mode" in the configuration file mag
 }
 ```
 
+### Install using Docker
+
+```
+docker build . -t mineru:latest
+```
+
+```
+git lfs clone https://huggingface.co/wanderkid/PDF-Extract-Kit
+docker run -it --rm -v ~/data/pdfkit_output:/output -v ~/data/pdfkit_input:/input -v ~/data/models/pdfkit_models:/opt/models --gpus all mineru magic-pdf pdf-command --pdf "/input/test.pdf" --inside_model true  --model_mode full
+```
 
 ### Usage
 
