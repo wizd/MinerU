@@ -40,8 +40,19 @@ RUN /bin/bash -c "source /opt/mineru_venv/bin/activate && \
 # 复制项目文件到容器中
 COPY . /home/mineru/magic-pdf
 
-# 创建用户 'mineru'
-RUN useradd --create-home --shell /bin/bash mineru
+# 创建用户 'mineru' 并设置UID和GID
+RUN useradd --create-home --shell /bin/bash --uid 1000 mineru
+
+# 创建必要的目录
+RUN mkdir -p /home/mineru/.config/matplotlib \
+    /home/mineru/.config/Ultralytics \
+    /home/mineru/.cache/huggingface/hub \
+    /opt/models
+
+# 设置环境变量
+ENV MPLCONFIGDIR=/home/mineru/.config/matplotlib
+ENV YOLO_CONFIG_DIR=/home/mineru/.config/Ultralytics
+ENV TRANSFORMERS_CACHE=/home/mineru/.cache/huggingface/hub
 
 # 复制配置文件模板并设置模型目录
 COPY magic-pdf.template.json /home/mineru/magic-pdf.json
@@ -87,6 +98,10 @@ RUN chown mineru:mineru /home/mineru/process_pdf.sh
 
 # 暴露SSH端口
 EXPOSE 5033
+
+# 优化权限设置
+RUN chown -R mineru:mineru /home/mineru && \
+    chown -R mineru:mineru /opt/models
 
 # 切换到mineru用户
 USER mineru
