@@ -1,5 +1,5 @@
 # 使用Ubuntu基础镜像
-FROM ubuntu:latest
+FROM nvidia/cuda:12.5.1-cudnn-devel-ubuntu22.04
 
 # 设置环境变量为非交互式，避免安装过程中的提示
 ENV DEBIAN_FRONTEND=noninteractive
@@ -7,21 +7,17 @@ ENV DEBIAN_FRONTEND=noninteractive
 # 更新包列表并安装必要的包
 RUN apt-get update && \
     apt-get install -y \
-    software-properties-common && \
-    add-apt-repository ppa:deadsnakes/ppa && \
-    apt-get update && \
-    apt-get install -y \
-        python3.10 \
-        python3.10-venv \
-        python3.10-distutils \
-        python3-pip \
-        wget \
-        git \
-        libgl1 \
-        libglib2.0-0 \
-        openssh-server \
-        locales \
-        && rm -rf /var/lib/apt/lists/*
+    python3.10 \
+    python3.10-venv \
+    python3.10-distutils \
+    python3-pip \
+    wget \
+    git \
+    libgl1 \
+    libglib2.0-0 \
+    openssh-server \
+    locales \
+    && rm -rf /var/lib/apt/lists/*
 
 # 生成并设置locale
 RUN sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
@@ -32,18 +28,18 @@ RUN sed -i 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
 ENV LANG=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 
-# 设置Python 3.10为默认python3
-RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
-
 # 创建MinerU的虚拟环境
 RUN python3 -m venv /opt/mineru_venv
 
 # 激活虚拟环境并安装必要的Python包
 RUN /bin/bash -c "source /opt/mineru_venv/bin/activate && \
     pip install --upgrade pip && \
-    pip install magic-pdf[full-cpu] detectron2 --extra-index-url https://myhloli.github.io/wheels/"
+    pip install magic-pdf[full]==0.6.2b1 detectron2 --extra-index-url https://wheels.myhloli.com -i https://pypi.tuna.tsinghua.edu.cn/simple && \
+    pip install --force-reinstall torch==2.3.1 torchvision==0.18.1 --index-url https://download.pytorch.org/whl/cu118"
 
-    
+# 复制项目文件到容器中
+COPY . /home/mineru/magic-pdf
+
 # 创建用户 'mineru'
 RUN useradd --create-home --shell /bin/bash mineru
 
