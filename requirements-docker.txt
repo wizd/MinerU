@@ -8,4 +8,11 @@ fast-langdetect==0.2.0
 wordninja>=2.0.0
 scikit-learn>=1.0.2
 pdfminer.six==20231228
-# The requirements.txt must ensure that only necessary external dependencies are introduced. If there are new dependencies to add, please contact the project administrator.
+unimernet==0.1.6
+matplotlib
+ultralytics
+paddleocr==2.7.3
+paddlepaddle==3.0.0b1
+pypandoc
+struct-eqtable==0.1.0
+detectron2
